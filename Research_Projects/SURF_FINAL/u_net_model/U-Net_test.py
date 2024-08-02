@@ -159,8 +159,9 @@ We want to do super resolution:
 
 from 64 * 64 --> 256 * 256
 """
-transform1 = T.Resize((64, 64))
-transform2 = T.Resize((256, 256))
+transform1 = T.Resize((64, 64), antialias=True)
+transform2 = T.Resize((256, 256), antialias=True)
+
 
 
 
@@ -196,7 +197,7 @@ def calculate_ssim(img1, img2):
     return ssim
 
 # Main code
-iteration_to_save = 60  # Change this to the desired iteration
+iteration_to_save = 6300  # Change this to the desired iteration
 total_psnr = 0
 total_ssim = 0
 num_samples = 0
@@ -225,21 +226,40 @@ with torch.no_grad():
 
         # Save images for the specified iteration
         if i == iteration_to_save:
+
+            plt.figure(figsize=(6, 6))
             plt.imshow(ct_test_slice.reshape(256, 256).cpu().numpy(), cmap='gray', vmin=0, vmax=1)
-            plt.title('Original CT Slice (256x256)')
-            plt.savefig('/home/ys92/EthanSURF/SURF_Research/SURF_Final/cond_diffu_CTs/U-Net_test_figs/gtcttest_{}_original.png'.format(i)) # ground truth figure
+            # plt.title('Original CT Slice (256x256)')
+            plt.axis('off')
+            plt.savefig('/home/ys92/EthanSURF/SURF_Research/SURF_Final/cond_diffu_CTs/U-Net_test_figs/original_CT_Slice_{}_original.png'.format(i), dpi=600, bbox_inches='tight', pad_inches=0) # ground truth figure
 
+            plt.figure(figsize=(6, 6))
             plt.imshow(ct_test_slice_64.reshape(64, 64).cpu().numpy(), cmap='gray', vmin=0, vmax=1)
-            plt.title('Downsampled CT Slice (64x64)')
-            plt.savefig('/home/ys92/EthanSURF/SURF_Research/SURF_Final/cond_diffu_CTs/U-Net_test_figs/gtcttest_{}_64.png'.format(i), dpi=300) # downsampled figure
+            # plt.title('Downsampled CT Slice (64x64)')
+            plt.axis('off')
+            plt.savefig('/home/ys92/EthanSURF/SURF_Research/SURF_Final/cond_diffu_CTs/U-Net_test_figs/downsampled_CT_Slice_{}_64.png'.format(i), dpi=600, bbox_inches='tight', pad_inches=0) # downsampled figure
 
+            plt.figure(figsize=(6, 6))
             plt.imshow(ct_test_slice_256.reshape(256, 256).cpu().numpy(), cmap='gray', vmin=0, vmax=1)
-            plt.title('Upsampled CT Slice (256x256)')
-            plt.savefig('/home/ys92/EthanSURF/SURF_Research/SURF_Final/cond_diffu_CTs/U-Net_test_figs/gtcttest_{}_256.png'.format(i), dpi=300) # upsampled figure
+            # plt.title('Upsampled CT Slice (256x256)')
+            plt.axis('off')
+            plt.savefig('/home/ys92/EthanSURF/SURF_Research/SURF_Final/cond_diffu_CTs/U-Net_test_figs/upsampled_CT_Slice_{}_256.png'.format(i), dpi=600, bbox_inches='tight', pad_inches=0) # upsampled figure
 
+            plt.figure(figsize=(6, 6))
             plt.imshow(predicted_ct_slice.reshape(256, 256).cpu().numpy(), cmap='gray', vmin=0, vmax=1)
-            plt.title('Predicted CT Slice (256x256)')
-            plt.savefig('/home/ys92/EthanSURF/SURF_Research/SURF_Final/cond_diffu_CTs/U-Net_test_figs/predictcttest_{}.png'.format(i), dpi=200) # prediction figure
+            #plt.title('Predicted CT Slice (256x256)')
+            plt.axis('off')
+            plt.savefig('/home/ys92/EthanSURF/SURF_Research/SURF_Final/cond_diffu_CTs/U-Net_test_figs/predict_CT_Slice_{}.png'.format(i), dpi=600, bbox_inches='tight', pad_inches=0) # prediction figure
+
+
+
+            # plt.figure(figsize=(6, 6))
+            # plt.imshow(predicted_ct_slice.reshape(256, 256).cpu().numpy(), cmap='gray', vmin=0, vmax=1)
+            # plt.title('dpi = 600')
+            # plt.axis('off')
+            # plt.savefig('/home/ys92/EthanSURF/SURF_Research/SURF_Final/cond_diffu_CTs/new_unet_test_figs/dpi_600_{}.png'.format(i), dpi=600, bbox_inches='tight', pad_inches=0) # prediction figure
+
+
 
     # Calculate average PSNR and SSIM
     avg_psnr = total_psnr / num_samples
